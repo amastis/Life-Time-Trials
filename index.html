@@ -455,38 +455,40 @@
             }
         }
 
-		function areTwoValuesGreater(newValues, originalValues) {
-		    if (newValues.length !== originalValues.length) {
-        		throw new Error("Arrays must have the same length");
-		    }
-    
-		    let count = 0;
-		    for (let i = 0; i < newValues.length; i++) {
-        		if (newValues[i] > originalValues[i]) {
-		            count++;
-        		}
-		        if (count >= 2) {
-        		    return true;
-		        }
-		    }
-    
-		    return false;
-		}
+	function areTwoValuesGreater(newValues, originalValues) {
+	    if (newValues.length !== originalValues.length) {
+                throw new Error("Arrays must have the same length");
+	    }
 
-		// Check difference in current accelerometer data
-		function compareAccelerometer() {
-	        let newAccelX = document.getElementById('accelX');
+	    let count = 0;
+	    for (let i = 0; i < newValues.length; i++) {
+        	if (newValues[i] > originalValues[i]) {
+		    count++;
+        	}
+		if (count >= 2) {
+        	    return true;
+		}
+	    }
+
+	    return false;
+	}
+
+	// Check difference in current accelerometer data
+	function compareAccelerometer() {
+	    let newAccelX = document.getElementById('accelX');
     	    let newAccelY = document.getElementById('accelY');
-        	let newAccelZ = document.getElementById('accelZ');
-	        let newRotAlpha = document.getElementById('rotAlpha');
+            let newAccelZ = document.getElementById('accelZ');
+	    let newRotAlpha = document.getElementById('rotAlpha');
     	    let newRotBeta = document.getElementById('rotBeta');
-        	let newRotGamma = document.getElementById('rotGamma');
+            let newRotGamma = document.getElementById('rotGamma');
 
-			if (areTwoValuesGreater([newAccelX, newAccelY, newAccelZ, newRotAlpha, newRotBeta, newRotGamma], motionElements)) {
+	    console.log([newAccelX, newAccelY, newAccelZ, newRotAlpha, newRotBeta, newRotGamma], motionElements);
+
+	    if (areTwoValuesGreater([newAccelX, newAccelY, newAccelZ, newRotAlpha, newRotBeta, newRotGamma], motionElements)) {
                 startStopwatch();
-			}			
-		}
-
+		console.log("stopping");
+	    }			
+	}
 
         // Update the stopwatch display
         function updateTime() {
