@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life's Time Trials</title>
+    <style>
+        @font-face {
+            font-family: 'Mario';
+            src: url('https://fonts.cdnfonts.com/css/new-super-mario-font-u');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #5c94fc; /* Mario sky blue */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            background-image: linear-gradient(to bottom, #5c94fc 0%, #5c94fc 70%, #00ab00 70%, #00ab00 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 4px solid #ffcb05; /* Mario gold */
+        }
+
+        h1 {
+            color: #e52521; /* Mario red */
+            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .stopwatch {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ffcb05; /* Mario gold */
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .countdown-display {
+            font-size: 4em;
+            font-weight: bold;
+            color: #e52521; /* Mario red */
+            text-shadow: 2px 2px 0 #000;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            visibility: hidden;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #e52521; /* Mario red */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #a00000;
+            transition: all 0.1s;
+            position: relative;
+            top: 0;
+        }
+
+        button:hover {
+            background-color: #ff3b36;
+        }
+
+        button:active {
+            top: 4px;
+            box-shadow: none;
+        }
+
+        button:disabled {
+            background-color: #888;
+            box-shadow: none;
+            cursor: not-allowed;
+            top: 4px;
+        }
+
+        .countdown-button {
+            background-color: #ffaa00; /* Mario orange */
+            box-shadow: 0 4px 0 #cc7700;
+        }
+
+        .countdown-button:hover {
+            background-color: #ffbb33;
+        }
+
+        .record-button {
+            background-color: #209e2e; /* Mario green */
+            box-shadow: 0 4px 0 #006e00;
+        }
+
+        .record-button:hover {
+            background-color: #30bf3f;
+        }
+
+        .reset-button {
+            background-color: #4166f5; /* Mario blue */
+            box-shadow: 0 4px 0 #1a40d0;
+        }
+
+        .reset-button:hover {
+            background-color: #5a7aff;
+        }
+
+        .top-times {
+            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            color: #333;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-times h2 {
+            color: #e52521; /* Mario red */
+            margin-top: 0;
+        }
+
+        .times-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .times-list li {
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #ffcb05; /* Mario gold */
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .times-list li::before {
+            content: "🍄";
+            margin-right: 10px;
+        }
+
+        .motion-data {
+            margin-top: 30px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .motion-data h2 {
+            color: #ffcb05; /* Mario gold */
+            margin-top: 0;
+        }
+
+        .motion-values {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: left;
+            padding: 0 20px;
+        }
+
+        .motion-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .motion-label {
+            font-weight: bold;
+            color: #ffcb05; /* Mario gold */
+        }
+
+        .audio-container {
+            display: none;
+        }
+        .links {
+        	padding: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LIFE'S TIME TRIALS</h1>
+        
+        <div class="countdown-display" id="countdownDisplay"></div>
+        <div class="stopwatch" id="display">00:00:00.000</div>
+        
+        <div class="controls">
+            <button id="countdown" class="countdown-button" hidden>START COUNTDOWN</button>
+            <button id="startStop">START</button>
+            <button id="record" class="record-button">RECORD TIME</button>
+            <button id="reset" class="reset-button">RESET</button>
+        </div>
+        
+        <div class="top-times">
+            <h2>TOP 5 FASTEST TIMES</h2>
+            <ul class="times-list" id="timesList">
+                <li>No times recorded yet!</li>
+            </ul>
+        </div>
+        
+        <div class="motion-data" hidden>
+            <h2>ACCELEROMETER DATA</h2>
+            <div class="motion-values">
+                <div class="motion-item">
+                    <div class="motion-label">X-Axis:</div>
+                    <div id="accelX">0.00</div>
+                </div>
+                <div class="motion-item">
+                    <div class="motion-label">Y-Axis:</div>
+                    <div id="accelY">0.00</div>
+                </div>
+                <div class="motion-item">
+                    <div class="motion-label">Z-Axis:</div>
+                    <div id="accelZ">0.00</div>
+                </div>
+                <div class="motion-item">
+                    <div class="motion-label">Rotation α:</div>
+                    <div id="rotAlpha">0.00</div>
+                </div>
+                <div class="motion-item">
+                    <div class="motion-label">Rotation β:</div>
+                    <div id="rotBeta">0.00</div>
+                </div>
+                <div class="motion-item">
+                    <div class="motion-label">Rotation γ:</div>
+                    <div id="rotGamma">0.00</div>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+    <div class="links">
+        <a href="https://www.instagram.com/p/DHMX68vS-tV/?hl=en">Inspiration</a>
+    </div>
+
+
+    <div class="audio-container">
+        <audio id="countdownAudio" preload="auto">
+            <source src="audio/Voicy_Mario Kart Race Start - Gaming Sound Effect.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <audio id="coinSound" preload="auto">
+            <source src="https://www.myinstants.com/media/sounds/smw_coin.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="startSound" preload="auto">
+            <source src="https://www.myinstants.com/media/sounds/smb_world_clear.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        // Stopwatch variables
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval;
+        let running = false;
+        let topTimes = [];
+        let countdownActive = false;
+
+        // DOM elements
+        const display = document.getElementById('display');
+        const countdownDisplay = document.getElementById('countdownDisplay');
+        const countdownButton = document.getElementById('countdown');
+        const startStopButton = document.getElementById('startStop');
+        const recordButton = document.getElementById('record');
+        const resetButton = document.getElementById('reset');
+        const timesList = document.getElementById('timesList');
+
+        // Audio elements
+        const countdownAudio = document.getElementById('countdownAudio');
+        const coinSound = document.getElementById('coinSound');
+        const startSound = document.getElementById('startSound');
+
+        // Motion data elements
+        const accelX = document.getElementById('accelX');
+        const accelY = document.getElementById('accelY');
+        const accelZ = document.getElementById('accelZ');
+        const rotAlpha = document.getElementById('rotAlpha');
+        const rotBeta = document.getElementById('rotBeta');
+        const rotGamma = document.getElementById('rotGamma');
+		const motionElements = [accelX, accelY, accelZ, rotAlpha, rotBeta, rotGamma];
+
+        // Initialization
+        function init() {
+            loadTimesFromLocalStorage();
+            updateTimesList();
+            requestDeviceMotionPermission();
+            
+            // Set up audio ended event listener
+            countdownAudio.addEventListener('ended', function() {
+                countdownActive = false;
+                countdownDisplay.style.visibility = 'hidden';
+                startStopwatch();
+                startSound.play().catch(err => console.error('Audio play failed:', err));
+            });
+        }
+
+        // Request permission for DeviceMotion API (if needed)
+        function requestDeviceMotionPermission() {
+            if (typeof DeviceMotionEvent !== 'undefined' && 
+                typeof DeviceMotionEvent.requestPermission === 'function') {
+                // iOS 13+ requires permission
+                document.body.addEventListener('click', () => {
+                    DeviceMotionEvent.requestPermission()
+                        .then(permissionState => {
+                            if (permissionState === 'granted') {
+                                setupMotionListeners();
+                            }
+                        })
+                        .catch(console.error);
+                }, { once: true });
+            } else {
+                // Other browsers
+                setupMotionListeners();
+            }
+        }
+
+        // Set up motion event listeners
+        function setupMotionListeners() {
+            if (window.DeviceMotionEvent) {
+                window.addEventListener('devicemotion', handleMotionEvent);
+            } else {
+                document.querySelector('.motion-data').innerHTML = 
+                    '<p>DeviceMotion not supported on this device</p>';
+            }
+            
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', handleOrientationEvent);
+            }
+        }
+
+        // Handle device motion events
+        function handleMotionEvent(event) {
+            const acceleration = event.accelerationIncludingGravity;
+            
+            if (acceleration) {
+                accelX.textContent = acceleration.x ? acceleration.x.toFixed(2) : 'N/A';
+                accelY.textContent = acceleration.y ? acceleration.y.toFixed(2) : 'N/A';
+                accelZ.textContent = acceleration.z ? acceleration.z.toFixed(2) : 'N/A';
+            }
+        }
+
+        // Handle device orientation events
+        function handleOrientationEvent(event) {
+            rotAlpha.textContent = event.alpha ? event.alpha.toFixed(2) : 'N/A';
+            rotBeta.textContent = event.beta ? event.beta.toFixed(2) : 'N/A';
+            rotGamma.textContent = event.gamma ? event.gamma.toFixed(2) : 'N/A';
+        }
+
+        // Format time (milliseconds to hh:mm:ss.ms)
+        function formatTime(timeInMs) {
+            let hours = Math.floor(timeInMs / 3600000);
+            let minutes = Math.floor((timeInMs % 3600000) / 60000);
+            let seconds = Math.floor((timeInMs % 60000) / 1000);
+            let milliseconds = timeInMs % 1000;
+
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
+        }
+
+        // Start countdown
+        function startCountdown() {
+            if (running || countdownActive) return;
+            
+            // Reset the stopwatch if it was previously used
+            resetStopwatch();
+            
+            // Disable buttons during countdown
+            countdownActive = true;
+            countdownButton.disabled = true;
+            startStopButton.disabled = true;
+            
+            // Show countdown display
+            countdownDisplay.style.visibility = 'visible';
+            countdownDisplay.textContent = 'GET READY!';
+            
+            // Play countdown audio
+            countdownAudio.currentTime = 0;
+            countdownAudio.play().catch(err => {
+                console.error('Audio play failed:', err);
+
+            });
+            startVisualCountdown();            
+        }
+
+        // Visual countdown fallback
+        function startVisualCountdown() {
+            countdownDisplay.textContent = '3';
+            
+            setTimeout(() => {
+                countdownDisplay.textContent = '2';
+                
+                setTimeout(() => {
+                    countdownDisplay.textContent = '1';
+                    
+                    setTimeout(() => {
+                        countdownDisplay.textContent = 'GO!';
+                        
+                        setTimeout(() => {
+                            countdownActive = false;
+                            countdownDisplay.style.visibility = 'hidden';
+                            startStopwatch();
+                        }, 500);
+                    }, 1000);
+                }, 1000);
+            }, 1500);
+        }
+
+        // Start the stopwatch
+        function startStopwatch() {
+            if (!running) {
+                // Start the stopwatch
+                startTime = Date.now();
+                elapsedTime = 0;
+                timerInterval = setInterval(updateTime, 10);
+                startStopButton.textContent = 'STOP';
+                startStopButton.style.backgroundColor = '#e52521';
+                startStopButton.disabled = false;
+                countdownButton.disabled = true;
+                running = true;
+            }
+        }
+
+        // Toggle stopwatch manually
+        function toggleStopwatch() {
+            if (countdownActive) return;
+            
+            if (!running) {
+                startStopwatch();
+            } else {
+                // Stop the stopwatch
+                clearInterval(timerInterval);
+                startStopButton.textContent = 'START';
+                startStopButton.style.backgroundColor = '#e52521';
+                countdownButton.disabled = false;
+                running = false;
+            }
+        }
+
+		function areTwoValuesGreater(newValues, originalValues) {
+		    if (newValues.length !== originalValues.length) {
+        		throw new Error("Arrays must have the same length");
+		    }
+    
+		    let count = 0;
+		    for (let i = 0; i < newValues.length; i++) {
+        		if (newValues[i] > originalValues[i]) {
+		            count++;
+        		}
+		        if (count >= 2) {
+        		    return true;
+		        }
+		    }
+    
+		    return false;
+		}
+
+		// Check difference in current accelerometer data
+		function compareAccelerometer() {
+	        let newAccelX = document.getElementById('accelX');
+    	    let newAccelY = document.getElementById('accelY');
+        	let newAccelZ = document.getElementById('accelZ');
+	        let newRotAlpha = document.getElementById('rotAlpha');
+    	    let newRotBeta = document.getElementById('rotBeta');
+        	let newRotGamma = document.getElementById('rotGamma');
+
+			if (areTwoValuesGreater([newAccelX, newAccelY, newAccelZ, newRotAlpha, newRotBeta, newRotGamma], motionElements)) {
+                startStopwatch();
+			}			
+		}
+
+
+        // Update the stopwatch display
+        function updateTime() {
+            elapsedTime = Date.now() - startTime;
+            display.textContent = formatTime(elapsedTime);
+            compareAccelerometer();
+        }
+
+        // Record the current time
+        function recordTime() {
+            if (elapsedTime > 0 && running) {
+                topTimes.push(elapsedTime);
+                topTimes.sort((a, b) => a - b);
+                // Keep only top 5
+                if (topTimes.length > 5) {
+                    topTimes = topTimes.slice(0, 5);
+                }
+                saveTimesToLocalStorage();
+                updateTimesList();
+                
+                // Add Mario sound effect
+                coinSound.currentTime = 0;
+                coinSound.play().catch(err => console.error('Audio play failed:', err));
+            }
+        }
+
+        // Reset the stopwatch
+        function resetStopwatch() {
+            clearInterval(timerInterval);
+            elapsedTime = 0;
+            display.textContent = '00:00:00.000';
+            startStopButton.textContent = 'START';
+            startStopButton.disabled = false;
+            countdownButton.disabled = false;
+            running = false;
+        }
+
+        // Update the top times list
+        function updateTimesList() {
+            if (topTimes.length === 0) {
+                timesList.innerHTML = '<li>No times recorded yet!</li>';
+                return;
+            }
+
+            timesList.innerHTML = '';
+            topTimes.forEach((time, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${index + 1}. ${formatTime(time)}</span>
+                `;
+                timesList.appendChild(li);
+            });
+        }
+
+        // Save times to localStorage
+        function saveTimesToLocalStorage() {
+            localStorage.setItem('marioStopwatchTimes', JSON.stringify(topTimes));
+        }
+
+        // Load times from localStorage
+        function loadTimesFromLocalStorage() {
+            const savedTimes = localStorage.getItem('marioStopwatchTimes');
+            if (savedTimes) {
+                topTimes = JSON.parse(savedTimes);
+            }
+        }
+
+        // Event listeners
+        window.onload = function() {
+            console.log("Page fully loaded!");
+            startCountdown();
+        };
+        //countdownButton.addEventListener('click', startCountdown);
+        startStopButton.addEventListener('click', toggleStopwatch);
+        recordButton.addEventListener('click', recordTime);
+        resetButton.addEventListener('click', resetStopwatch);
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
+
