@@ -297,7 +297,7 @@
         const rotAlpha = document.getElementById('rotAlpha');
         const rotBeta = document.getElementById('rotBeta');
         const rotGamma = document.getElementById('rotGamma');
-		const motionElements = [accelX, accelY, accelZ, rotAlpha, rotBeta, rotGamma];
+	motionElements = [];
 
         // Initialization
         function init() {
@@ -312,6 +312,7 @@
                 startStopwatch();
                 startSound.play().catch(err => console.error('Audio play failed:', err));
             });
+	    motionElements = getAccelValues();
         }
 
         // Request permission for DeviceMotion API (if needed)
@@ -473,18 +474,27 @@
 	    return false;
 	}
 
+	function getTextByIDAndConvertToFloat(idTag) {
+	    return parseFloat(document.getElementById(idTag).textContent);
+	}
+
+	function getAccelValues() {
+	    let newAccelX = getTextByIDAndConvertToFloat('accelX');
+    	    let newAccelY = getTextByIDAndConvertToFloat('accelY');
+            let newAccelZ = getTextByIDAndConvertToFloat('accelZ');
+	    let newRotAlpha = getTextByIDAndConvertToFloat('rotAlpha');
+    	    let newRotBeta = getTextByIDAndConvertToFloat('rotBeta');
+            let newRotGamma = getTextByIDAndConvertToFloat('rotGamma');
+	    
+	    return [newAccelX, newAccelY, newAccelZ, newRotAlpha, newRotBeta, newRotGamma];
+	}
+	    
 	// Check difference in current accelerometer data
 	function compareAccelerometer() {
-	    let newAccelX = document.getElementById('accelX');
-    	    let newAccelY = document.getElementById('accelY');
-            let newAccelZ = document.getElementById('accelZ');
-	    let newRotAlpha = document.getElementById('rotAlpha');
-    	    let newRotBeta = document.getElementById('rotBeta');
-            let newRotGamma = document.getElementById('rotGamma');
+	    let accelValues = getAccelValues();
+	    console.log(accelValues, motionElements);
 
-	    console.log([newAccelX, newAccelY, newAccelZ, newRotAlpha, newRotBeta, newRotGamma], motionElements);
-
-	    if (areTwoValuesGreater([newAccelX, newAccelY, newAccelZ, newRotAlpha, newRotBeta, newRotGamma], motionElements)) {
+	    if (areTwoValuesGreater(accelValues, motionElements)) {
                 startStopwatch();
 		console.log("stopping");
 	    }			
@@ -557,10 +567,6 @@
         }
 
         // Event listeners
-        window.onload = function() {
-            console.log("Page fully loaded!");
-            startCountdown();
-        };
         //countdownButton.addEventListener('click', startCountdown);
         startStopButton.addEventListener('click', toggleStopwatch);
         recordButton.addEventListener('click', recordTime);
@@ -568,6 +574,10 @@
 
         // Initialize the app
         init();
+	window.onload = function() {
+            console.log("Page fully loaded!");
+            startCountdown();
+        };
     </script>
 </body>
 </html>
