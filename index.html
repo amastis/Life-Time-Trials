@@ -312,7 +312,6 @@
                 startStopwatch();
                 startSound.play().catch(err => console.error('Audio play failed:', err));
             });
-	    motionElements = getAccelValues();
         }
 
         // Request permission for DeviceMotion API (if needed)
@@ -347,6 +346,8 @@
             if (window.DeviceOrientationEvent) {
                 window.addEventListener('deviceorientation', handleOrientationEvent);
             }
+	    let accelValues = getAccelValues();
+	    motionElements = accelValues.map(num => num * 1.5);
         }
 
         // Handle device motion events
@@ -495,7 +496,7 @@
 	    console.log(accelValues, motionElements);
 
 	    if (areTwoValuesGreater(accelValues, motionElements)) {
-                startStopwatch();
+                toggleStopwatch();
 		console.log("stopping");
 	    }			
 	}
