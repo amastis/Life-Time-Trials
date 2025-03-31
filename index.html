@@ -403,10 +403,6 @@
 
             });
             startVisualCountdown();
-
-	    let accelValues = getAccelValues();
-	    motionElements = accelValues.map(num => num * 1.5);
-	    console.log(motionElements);
         }
 
         // Visual countdown fallback
@@ -435,6 +431,9 @@
         // Start the stopwatch
         function startStopwatch() {
             if (!running) {
+		let accelValues = getAccelValues();
+	        motionElements = accelValues.map(num => num * 1.5);
+	        console.log(motionElements);
                 // Start the stopwatch
                 startTime = Date.now();
                 elapsedTime = 0;
