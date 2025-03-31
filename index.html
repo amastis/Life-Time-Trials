@@ -346,8 +346,6 @@
             if (window.DeviceOrientationEvent) {
                 window.addEventListener('deviceorientation', handleOrientationEvent);
             }
-	    let accelValues = getAccelValues();
-	    motionElements = accelValues.map(num => num * 1.5);
         }
 
         // Handle device motion events
@@ -576,6 +574,9 @@
         // Initialize the app
         init();
 	window.onload = function() {
+	    let accelValues = getAccelValues();
+	    motionElements = accelValues.map(num => num * 1.5);
+	    console.log(motionElements);
             console.log("Page fully loaded!");
             startCountdown();
         };
