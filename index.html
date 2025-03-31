@@ -430,7 +430,7 @@
 
 	function getRange(values) {
 	    return values.map(num => { // returns the upper and lower ranges (positioned depending on whether the num is neg/pos to compare easily)
-		let newValue = num * 1.5;
+		let newValue = num * 1.9; // TODO - what range works to track an extreme movement
         	let difference = newValue - num;
 		if (num < 0) { // it is negative
 		    return [num - difference, newValue]; // higher value first
