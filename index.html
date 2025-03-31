@@ -382,10 +382,6 @@
 
         // Start countdown
         function startCountdown() {
-	    let accelValues = getAccelValues();
-	    motionElements = accelValues.map(num => num * 1.5);
-	    console.log(motionElements);
-
             if (running || countdownActive) return;
             
             // Reset the stopwatch if it was previously used
@@ -406,7 +402,11 @@
                 console.error('Audio play failed:', err);
 
             });
-            startVisualCountdown();            
+            startVisualCountdown();
+
+	    let accelValues = getAccelValues();
+	    motionElements = accelValues.map(num => num * 1.5);
+	    console.log(motionElements);
         }
 
         // Visual countdown fallback
