@@ -305,6 +305,7 @@
             loadTimesFromLocalStorage();
             updateTimesList();
             requestDeviceMotionPermission();
+	    setupMotionListeners();
             
             // Set up audio ended event listener
             countdownAudio.addEventListener('ended', function() {
