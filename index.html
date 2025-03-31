@@ -428,11 +428,23 @@
             }, 1500);
         }
 
+	function getRange(values) {
+	    return values.map(num => { // returns the upper and lower ranges (positioned depending on whether the num is neg/pos to compare easily)
+		let newValue = num * 1.5;
+        	let difference = newValue - num;
+		if (num < 0) { // it is negative
+		    return [num - difference, newValue]; // higher value first
+		} else {
+		    return [newValue, num - difference]; // higher value first
+		}
+	    });
+	}
+	
         // Start the stopwatch
         function startStopwatch() {
             if (!running) {
 		let accelValues = getAccelValues();
-	        motionElements = accelValues.map(num => num * 1.5);
+	        motionElements = getRange(accelValues);
 	        console.log(motionElements);
                 // Start the stopwatch
                 startTime = Date.now();
@@ -469,7 +481,7 @@
 
 	    let count = 0;
 	    for (let i = 0; i < newValues.length; i++) {
-        	if (newValues[i] > originalValues[i]) {
+        	if (newValues[i] > originalValues[i][0] || newValues[i] < originalValues[i][1]) {
 		    count++;
         	}
 		if (count >= 2) {
