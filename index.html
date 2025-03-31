@@ -297,7 +297,7 @@
         const rotAlpha = document.getElementById('rotAlpha');
         const rotBeta = document.getElementById('rotBeta');
         const rotGamma = document.getElementById('rotGamma');
-	motionElements = [];
+	var motionElements = [];
 
         // Initialization
         function init() {
@@ -313,7 +313,6 @@
                 startSound.play().catch(err => console.error('Audio play failed:', err));
             });
         }
-	init();
 
         // Request permission for DeviceMotion API (if needed)
         function requestDeviceMotionPermission() {
@@ -574,6 +573,7 @@
 
         // Initialize the app
 	window.onload = function() {
+	    init();
 	    let accelValues = getAccelValues();
 	    motionElements = accelValues.map(num => num * 1.5);
 	    console.log(motionElements);
