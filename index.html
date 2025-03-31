@@ -301,6 +301,7 @@
 
         // Initialization
         function init() {
+	    console.log('init');
             loadTimesFromLocalStorage();
             updateTimesList();
             requestDeviceMotionPermission();
@@ -316,6 +317,7 @@
 
         // Request permission for DeviceMotion API (if needed)
         function requestDeviceMotionPermission() {
+	    console.log('motion permission');
             if (typeof DeviceMotionEvent !== 'undefined' && 
                 typeof DeviceMotionEvent.requestPermission === 'function') {
                 // iOS 13+ requires permission
@@ -336,6 +338,7 @@
 
         // Set up motion event listeners
         function setupMotionListeners() {
+	    console.log('motion listener');
             if (window.DeviceMotionEvent) {
                 window.addEventListener('devicemotion', handleMotionEvent);
             } else {
